@@ -59,12 +59,12 @@ class BinarySearchTree:
     def getRoot(self):
         return self.root
 
-    def showTree(self, parent, current_node):
+    def showTreePre(self, parent, current_node):
         if current_node != None:
             if parent != current_node:
                 print('%d' % parent.getLabel(), "->", '%d' % current_node.getLabel())
-            self.showTree(current_node, current_node.getLeft())
-            self.showTree(current_node, current_node.getRight())
+            self.showTreePre(current_node, current_node.getLeft())
+            self.showTreePre(current_node, current_node.getRight())
 
     def showTreePos(self, node=None):
         if node is None:
@@ -74,6 +74,12 @@ class BinarySearchTree:
         if node.getRight():
             self.showTreePos(node.getRight())
         print(node.getLabel())
+
+    def showTreeInOrder(self, node=None):
+         if node != None:
+              self.showTreeInOrder(node.getLeft())
+              print(node.getLabel(),end=" " + "\n")
+              self.showTreeInOrder(node.getRight())
 
     # METODO DE BUSCA AUXILIAR
     def search_aux(self, node, label):
@@ -95,29 +101,13 @@ class BinarySearchTree:
 
     ### MÉTODO DE BUSCA
     def search(self, label):
-
-        # verifica se a arvore esta vazia antes de iniciar a busca
         if self.empty():
             return "Empty Tree"
         else:
-            # arvore nao esta vazia - inicia a busca
             node_busca = self.search_aux(self.root, label)
             if node_busca is None:
                 return "Node not found"
             return node_busca
-
-      # MÉTODO DE AUXÍLIO PARA EXCLUIR NODO, PROCURANDO O NÓ MAIS A DIREITA
-    def aux_nodo(self, parent, node):
-
-        # Verifica se o nodo a direita existe e de forma recursiva caminha para direita.
-        if node.getRight() is not None:
-            node = self.aux_nodo(node, node.getRight())
-        else:
-            parent.setRight(None)
-
-        return node
-
-    #remover nodo
     '''
         Caso 1: nó a ser inserido nao tem filhos. Caso simples, basta setar a ligacao do pai para NONE
         
@@ -126,7 +116,6 @@ class BinarySearchTree:
         Caso 3: nó a ser removido possui dois filhos, basta pegar o menor elemento da subarvore a direita e substituir
 
     '''
-
      # Encontrando o MAIOR e o MENOR elemento numa ÁRVORE Binária de Busca
     def min(self, node=ROOT):
         if node == ROOT:
@@ -137,43 +126,30 @@ class BinarySearchTree:
 
     # MÉTODO DE REMOÇÃO
     def remove(self, value, node=ROOT):
-        # Se for o valor padrão, node começa a ser a RAIZ da árvore.
         if node == ROOT:
             node = self.root
-        # Tratando o caso base, se o Nó for nulo.
         if node is None:
             return node
-        # Se o valor do Nó for menor, caminha para esquerda de forma recursiva.
         if value < node.label:
             node.left = self.remove(value, node.left)
-        # Se o valor do Nó for maior, caminha para direita de forma recursiva.
         elif value > node.label:
-            #Substitui a subárvore a direita pelo o que a função recursiva irá retornar
             node.right = self.remove(value, node.right)
-        # Cai no else quando o valor é igual, onde inicia a REMOÇÃO
         else:
-            # NÓ não tem filho a esquerda nem a direita = FOLHA, retorna NONE
+            # CASO 1
             if node.left is None and node.right is None:
                 return None
-            # TRATANDO SEPARADAMENTE OS CASOS = Não tem filho à esquerda, então retorna o ramo da direita.
+            # Caso 2
             if node.left is None:
                 return node.right
-            # Não tem filho à direita, então retorna o ramo da esquerda.
+            # Caso 2
             elif node.right is None:
                 return node.left
             else:
-                # Cai no else quando TEM FILHO A ESQUERDA E FILHO A DIREITA.
-                # Substituto é o sucessor do valor a ser removido, DEVEMOS BUSCAR O MENOR ELEMENTO DO RAMO A DIREITA
-                # Para isso será utilizado a função min, onde encontra o menor elemento.
+                # Caso 3
                 substituto = self.min(node.right)
-                # Ao invés de trocar a posição dos nós, troca o valor
                 node.label = substituto
-                # Depois, remove o substituto da subárvore à direita
                 node.right = self.remove(substituto, node.right)
-
-        # Caso não encerre a função
         return node
-
 
     def altura(self, label):
           if label == None or label.getLeft() == None and label.getRight() == None:
