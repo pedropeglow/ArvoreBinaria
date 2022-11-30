@@ -7,15 +7,14 @@ def menu():
         2 - Search an element in Binary Tree
         3 - Remove an element in Binary Tree
         4 - Show Tree
-        5 - Tree Height
+        5 - Show Tree Pos
+        6 - Tree Height
         ************************************""")
     return input()
 
-#Instanciando a Classe
 tree = BinarySearchTree()
 
 while True:
-
     answer = menu()
 
     if answer == "0":
@@ -49,7 +48,7 @@ while True:
     elif answer == "3":
         element = input("Type an element: ")
         try:
-            tree.removeNovo(int(element))
+            tree.remove(int(element))
         except ValueError as e:
             print("Type a valid number")
 
@@ -58,8 +57,11 @@ while True:
         tree.showTree(tree.getRoot(), tree.getRoot())
 
     elif answer == "5":
-        print("Altura da árvore: ", tree.altura(tree.getRoot()))
+        tree.showTreePos(tree.getRoot())
 
-    
+
+    elif answer == "6":
+        print("Tree Height: ", tree.altura(tree.getRoot()))
+
     else:
         print("ERROR! Enter a menu option")

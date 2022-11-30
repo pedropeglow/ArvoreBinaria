@@ -53,7 +53,11 @@ class BinarySearchTree:
         if self.root == None:
             return True
         else:
-            return False 
+            return False
+
+    #pega raiz
+    def getRoot(self):
+        return self.root
 
     def showTree(self, parent, current_node):
         if current_node != None:
@@ -62,19 +66,14 @@ class BinarySearchTree:
             self.showTree(current_node, current_node.getLeft())
             self.showTree(current_node, current_node.getRight())
 
-    #pega raiz
-    def getRoot(self):
-        return self.root 
-
-    #remover nodo
-    '''
-        Caso 1: nó a ser inserido nao tem filhos. Caso simples, basta setar a ligacao do pai para NONE
-        
-        Caso 2: nó a ser removido tem somente 1 filho. Basta colocar o seu filho no lugar dele
-
-        Caso 3: nó a ser removido possui dois filhos, basta pegar o menor elemento da subarvore a direita e substituir
-
-    '''
+    def showTreePos(self, node=None):
+        if node is None:
+            node = self.root
+        if node.getLeft():
+            self.showTreePos(node.getLeft())
+        if node.getRight():
+            self.showTreePos(node.getRight())
+        print(node.getLabel())
 
     # METODO DE BUSCA AUXILIAR
     def search_aux(self, node, label):
@@ -118,82 +117,15 @@ class BinarySearchTree:
 
         return node
 
-    # MÉTODO DE REMOÇÃO AUXILIAR
-    def remove_aux(self, parent_node, node, label):
-        if node.getLabel() == label:
-            # Folha - Faz a verificação se o nodo da esquerda e o nodo da direita é NONE
-            if node.getLeft() is None and node.getRight() is None:
-                # Verifica se é filho da esquerda ou da direita
-                if parent_node.getLabel() < label:
-                    parent_node.setRight(None) # Se for filho a direita do pai
-                else:
-                    parent_node.setLeft(None) # Se for filho a esquerda do pai
+    #remover nodo
+    '''
+        Caso 1: nó a ser inserido nao tem filhos. Caso simples, basta setar a ligacao do pai para NONE
+        
+        Caso 2: nó a ser removido tem somente 1 filho. Basta colocar o seu filho no lugar dele
 
-            # 1 filho a direita
-            # Se possui um filho a direita, irá substituir pela subÁrvore a esquerda
-            if node.getLeft() is None and node.getRight() is not None:
-                if parent_node.getLabel() < node.getLabel():
-                    parent_node.setRight(node.getRight()) # Se for filho a direita do pai
-                else:
-                    parent_node.setLeft(node.getRight()) # Se for filho a esquerda do pai
+        Caso 3: nó a ser removido possui dois filhos, basta pegar o menor elemento da subarvore a direita e substituir
 
-            # 1 filho a esquerda
-            # Se possui um filho a esquerda, irá substituir pela subÁrvore a direita
-            if node.getLeft() is not None and node.getRight() is None:
-                if parent_node.getLabel() < node.getLabel():
-                    parent_node.setRight(node.getLeft())
-                else:
-                    parent_node.setLeft(node.getLeft())
-
-            # Se possui 2 filhos
-            if node.getLeft() is not None and node.getRight() is not None:
-            
-            # Precisamos encontrar um substituto para o nodo que estamos removendo, e seu substituto ideal é seu SUCESSOR dentro desta árvore
-
-                if node.getLeft().getRight() is None:
-                    nodo_aux = node.getLeft()
-                    nodo_aux.setRight(node.getRight())
-
-                else:
-                    nodo_aux = self.aux_nodo(node, node.getLeft())
-                    nodo_aux.setRight(node.getRight())
-                    if nodo_aux.getLeft() is not None:
-                        node.getLeft().setRight(nodo_aux.getLeft())
-                        nodo_aux.setLeft(node.getLeft())
-                    else:
-                        nodo_aux.setLeft(node.getLeft())
-
-                if parent_node.getLabel() < node.getLabel():
-                    parent_node.setRight(nodo_aux)
-                else:
-                    parent_node.setLeft(nodo_aux)
-
-            return None
-
-        else:
-            if node.getLabel() < label and node.getRight() is not None:
-                node_b = self.remove_aux(node, node.getRight(), label)
-                if node_b is not None:
-                    return node_b
-
-            if node.getLabel() > label and node.getLeft() is not None:
-                node_b = self.remove_aux(node, node.getLeft(), label)
-                if node_b is not None:
-                    return node_b
-
-        return None
-
-    def remove(self, label):
-
-        # verifica se a arvore esta vazia antes de iniciar
-        if self.empty():
-            return "Empty Tree"
-        else:
-            # Inicia a busca para remoção de nodo
-            node_busca = self.remove_aux(self.root, self.root, label)
-            if node_busca is None:
-                return "Node does not exist in the tree"
-            return node_busca
+    '''
 
      # Encontrando o MAIOR e o MENOR elemento numa ÁRVORE Binária de Busca
     def min(self, node=ROOT):
@@ -204,7 +136,7 @@ class BinarySearchTree:
         return node.label
 
     # MÉTODO DE REMOÇÃO
-    def removeNovo(self, value, node=ROOT):
+    def remove(self, value, node=ROOT):
         # Se for o valor padrão, node começa a ser a RAIZ da árvore.
         if node == ROOT:
             node = self.root
@@ -213,11 +145,11 @@ class BinarySearchTree:
             return node
         # Se o valor do Nó for menor, caminha para esquerda de forma recursiva.
         if value < node.label:
-            node.left = self.removeNovo(value, node.left)
+            node.left = self.remove(value, node.left)
         # Se o valor do Nó for maior, caminha para direita de forma recursiva.
         elif value > node.label:
             #Substitui a subárvore a direita pelo o que a função recursiva irá retornar
-            node.right = self.removeNovo(value, node.right)
+            node.right = self.remove(value, node.right)
         # Cai no else quando o valor é igual, onde inicia a REMOÇÃO
         else:
             # NÓ não tem filho a esquerda nem a direita = FOLHA, retorna NONE
@@ -237,12 +169,11 @@ class BinarySearchTree:
                 # Ao invés de trocar a posição dos nós, troca o valor
                 node.label = substituto
                 # Depois, remove o substituto da subárvore à direita
-                node.right = self.removeNovo(substituto, node.right)
+                node.right = self.remove(substituto, node.right)
 
         # Caso não encerre a função
         return node
 
-            
 
     def altura(self, label):
           if label == None or label.getLeft() == None and label.getRight() == None:
