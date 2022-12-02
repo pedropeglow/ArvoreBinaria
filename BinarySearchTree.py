@@ -5,6 +5,7 @@ class BinarySearchTree:
     def __init__(self):
         self.root = None
     
+    #INSERT
     def insert(self, label):
         #cria um novo no
         node = Node(label) 
@@ -47,7 +48,8 @@ class BinarySearchTree:
                         dad_node.setRight(node)
                     
                     break #insercao realizada
-
+    
+    #VERIFICA SE ÁRVORE ESTÁ VAZIA
     def empty(self):
         # Raiz vazia: árvore vazia
         if self.root == None:
@@ -55,10 +57,32 @@ class BinarySearchTree:
         else:
             return False
 
-    #pega raiz
+    #PEGA RAIZ DA ÁRVORE
     def getRoot(self):
         return self.root
 
+    #PREORDER TRAVERSAL
+    def showPreOrderTraversal(self, root):
+        if root:
+            print(root.getLabel())
+            self.showPreOrderTraversal(root.getLeft())
+            self.showPreOrderTraversal(root.getRight())
+    
+    #INORDER TRAVERSAL
+    def showInOrderTraversal(self, node=None):
+         if node != None:
+              self.showInOrderTraversal(node.getLeft())
+              print(node.getLabel(),end=" " + "\n")
+              self.showInOrderTraversal(node.getRight())
+    
+    #POSTORDER TRAVERSAL
+    def showPostOrderTraversal(self, root):
+        if root:
+            self.showPostOrderTraversal(root.getLeft())
+            self.showPostOrderTraversal(root.getRight())
+            print(root.getLabel())
+
+    #SHOW TREE PREORDER
     def showTreePre(self, parent, current_node):
         if current_node != None:
             if parent != current_node:
@@ -73,13 +97,9 @@ class BinarySearchTree:
             self.showTreePos(node.getLeft())
         if node.getRight():
             self.showTreePos(node.getRight())
-        print(node.getLabel())
+        print(node.getLabel(), ' -> ', end=" ")
 
-    def showTreeInOrder(self, node=None):
-         if node != None:
-              self.showTreeInOrder(node.getLeft())
-              print(node.getLabel(),end=" " + "\n")
-              self.showTreeInOrder(node.getRight())
+    
 
     # METODO DE BUSCA AUXILIAR
     def search_aux(self, node, label):
