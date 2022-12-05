@@ -23,7 +23,7 @@ class TestMainTest(unittest.TestCase):
         print("Elemento a ser removido:", label)
         self.tree.remove(label)
         print("-"*20)
-        print("Arvore depois da remocao")
+        print("Arvore depois da remocao ->")
         self.tree.showTreePre(self.tree.getRoot(), self.tree.getRoot())
 
     def remove_elemento_show_tree_pos(self, label):
