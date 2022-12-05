@@ -63,41 +63,56 @@ class BinarySearchTree:
 
     #PREORDER TRAVERSAL
     def showPreOrderTraversal(self, root):
-        if root:
-            print(root.getLabel())
-            self.showPreOrderTraversal(root.getLeft())
-            self.showPreOrderTraversal(root.getRight())
-    
+        if self.empty():
+            print("Empty Tree!")
+        else:
+            if root:
+                print(root.getLabel())
+                self.showPreOrderTraversal(root.getLeft())
+                self.showPreOrderTraversal(root.getRight())
+        
     #INORDER TRAVERSAL
     def showInOrderTraversal(self, node=None):
-         if node != None:
-              self.showInOrderTraversal(node.getLeft())
-              print(node.getLabel(),end=" " + "\n")
-              self.showInOrderTraversal(node.getRight())
+        if self.empty():
+            print("Empty Tree!")
+        else:
+            if node != None:
+                self.showInOrderTraversal(node.getLeft())
+                print(node.getLabel(),end=" " + "\n")
+                self.showInOrderTraversal(node.getRight())
     
     #POSTORDER TRAVERSAL
     def showPostOrderTraversal(self, root):
-        if root:
-            self.showPostOrderTraversal(root.getLeft())
-            self.showPostOrderTraversal(root.getRight())
-            print(root.getLabel())
+        if self.empty():
+            print("Empty Tree!")
+        else:
+            if root:
+                self.showPostOrderTraversal(root.getLeft())
+                self.showPostOrderTraversal(root.getRight())
+                print(root.getLabel())
 
     #SHOW TREE PREORDER
     def showTreePre(self, parent, current_node):
-        if current_node != None:
-            if parent != current_node:
-                print('%d' % parent.getLabel(), "->", '%d' % current_node.getLabel())
-            self.showTreePre(current_node, current_node.getLeft())
-            self.showTreePre(current_node, current_node.getRight())
+        if self.empty():
+            print("Empty Tree!")
+        else:
+            if current_node != None:
+                if parent != current_node:
+                    print('%d' % parent.getLabel(), "->", '%d' % current_node.getLabel())
+                self.showTreePre(current_node, current_node.getLeft())
+                self.showTreePre(current_node, current_node.getRight())
 
     def showTreePos(self, node=None):
-        if node is None:
-            node = self.root
-        if node.getLeft():
-            self.showTreePos(node.getLeft())
-        if node.getRight():
-            self.showTreePos(node.getRight())
-        print(node.getLabel(), ' -> ', end=" ")
+        if self.empty():
+            print("Empty Tree!")
+        else:
+            if node is None:
+                node = self.root
+            if node.getLeft():
+                self.showTreePos(node.getLeft())
+            if node.getRight():
+                self.showTreePos(node.getRight())
+            print(node.getLabel(), ' -> ', end=" ")
 
     
 
@@ -122,11 +137,11 @@ class BinarySearchTree:
     ### MÉTODO DE BUSCA
     def search(self, label):
         if self.empty():
-            return "Empty Tree"
+            return False
         else:
             node_busca = self.search_aux(self.root, label)
             if node_busca is None:
-                return "Node not found"
+                return False
             return node_busca
     '''
         Caso 1: nó a ser inserido nao tem filhos. Caso simples, basta setar a ligacao do pai para NONE
