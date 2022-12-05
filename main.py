@@ -76,7 +76,7 @@ while True:
         print("-"*20)
         if search_element.isdigit():
             node = tree.search(int(search_element))
-            if node is None:
+            if node is False:
                 print("Element does not exist")
             else:
                 print(f"Found node address: {node}")
